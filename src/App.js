@@ -37,12 +37,12 @@ function App() {
       if (cardOne.src === cardTwo.src) {
         setCards(
           prevCards => {
-            return prevCards.map((card)=>{
-              if(card.src === cardOne.src) {
-                return {...card, matched: true }
+            return prevCards.map((card) => {
+              if (card.src === cardOne.src) {
+                return { ...card, matched: true }
               }
-              else 
-               return  card
+              else
+                return card
             })
           }
         )
@@ -50,7 +50,7 @@ function App() {
       else {
         console.log("cards are not matching");
       }
-      resetTurn();
+      setTimeout(()=>resetTurn(), 1000) 
     }
   }, [cardOne, cardTwo])
 
@@ -71,6 +71,7 @@ function App() {
             card={card}
             key={card.id}
             handleChoice={handleChoice}
+            flipped={card === cardOne || card === cardTwo || card.matched}
           />
         ))}
       </div>
