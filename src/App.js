@@ -18,6 +18,7 @@ function App() {
   const [turns, setTurns] = useState(0)
   const [cardOne, setCardOne] = useState(null)
   const [cardTwo, setCardTwo] = useState(null)
+  const [disable, setDisable] = useState(false)
 
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -25,6 +26,8 @@ function App() {
       .map((card) => ({ ...card, id: Math.random() }));
 
     setCards(shuffledCards)
+    setCardOne(null)
+    setCardTwo(null)
     setTurns(0)
   }
 
@@ -32,8 +35,10 @@ function App() {
     cardOne ? setCardTwo(value) : setCardOne(value)
   }
 
+  //Match the cards
   useEffect(() => {
     if (cardOne && cardTwo) {
+      setDisable(true)
       if (cardOne.src === cardTwo.src) {
         setCards(
           prevCards => {
@@ -47,20 +52,24 @@ function App() {
           }
         )
       }
-      else {
-        console.log("cards are not matching");
-      }
+      
       setTimeout(()=>resetTurn(), 1000) 
     }
   }, [cardOne, cardTwo])
 
-  console.log(cards)
 
   const resetTurn = () => {
+    setDisable(false)
     setCardOne(null)
     setCardTwo(null)
     setTurns(prevTurn => prevTurn + 1)
   }
+
+  //start the game automatically
+  useEffect(()=>{
+    shuffleCards()
+  },[])
+
   return (
     <div className="App">
       <h1>Image Match</h1>
@@ -72,9 +81,11 @@ function App() {
             key={card.id}
             handleChoice={handleChoice}
             flipped={card === cardOne || card === cardTwo || card.matched}
+            disable = {disable}
           />
         ))}
       </div>
+      <p>Turns:{turns}</p>
     </div>
   );
 }
